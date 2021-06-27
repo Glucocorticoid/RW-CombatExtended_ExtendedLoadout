@@ -10,7 +10,7 @@ namespace CombatExtended.ExtendedLoadout
     [AttributeUsage(AttributeTargets.Method)]
     public class ClearDataOnNewGame : Attribute {}
 
-    public class Cleaner_GameComponent : GameComponent
+    /*public class Cleaner_GameComponent : GameComponent
 	{
         private static List<MethodInfo>? _clearDataMethods;
 
@@ -38,5 +38,5 @@ namespace CombatExtended.ExtendedLoadout
         {
             DbgLog.Wrn($"LoadedGame: {Scribe.mode}");
         }
-    }
+    }*/
 }
