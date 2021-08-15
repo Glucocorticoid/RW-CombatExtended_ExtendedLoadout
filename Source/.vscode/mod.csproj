@@ -42,8 +42,16 @@
 	 	<Compile Include="../*.cs" />
 	 	<Compile Include="../Loadout/**/*.cs" />
 		
-	 	<!-- Rimworld -->
+	 	<!-- Rimworld 
 	 	<Reference Include="packages/*.dll">
+			<Private>False</Private>
+		</Reference> -->
+
+		<Reference Include="../../../_Assemblies_13/*.dll">
+			<Private>False</Private>
+		</Reference>
+
+		<Reference Include="../../../_Assemblies_Mods/*.dll" >
 			<Private>False</Private>
 		</Reference>
 

@@ -67,7 +67,7 @@ namespace CombatExtended.ExtendedLoadout
                     Log.Warning($"[BPC_AssignLink_Manager] Fix loadouts list. Count difference: {sizeDelta}");
                     for (int i = 0; i < sizeDelta; i++)
                     {
-                        columns.Add(LoadoutManager.DefaultLoadout.uniqueID);
+                        columns.Add(LoadoutManager.DefaultLoadout.GetUniqueID());
                     }
 
                     LoadoutIds[instance] = columns;
@@ -124,7 +124,7 @@ namespace CombatExtended.ExtendedLoadout
             {
                 for (int i = 0; i < columns.Count; i++)
                 {
-                    var loadout = LoadoutManager.GetLoadoutById(columns[i]);
+                    var loadout = LoadoutManager.Loadouts.Find(l => l.GetUniqueID() == columns[i]);
                     pawn.SetLoadout(loadout, i);
                 }
             }
@@ -133,7 +133,7 @@ namespace CombatExtended.ExtendedLoadout
         public static void SaveLoadoutId(object assignLink, Pawn pawn)
         {
             var loadoutMulti = (Loadout_Multi)pawn.GetLoadout();
-            var columns = loadoutMulti.Loadouts.Select(x => x.uniqueID).ToList();
+            var columns = loadoutMulti.Loadouts.Select(x => x.GetUniqueID()).ToList();
             BPC_AssignLink_Manager.AddColumnsIds(assignLink, columns);
         }
 

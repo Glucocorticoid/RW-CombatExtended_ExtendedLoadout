@@ -5,6 +5,7 @@ using HugsLib;
 using HugsLib.Settings;
 using RimWorld;
 using Verse;
+using System.Reflection;
 
 namespace CombatExtended.ExtendedLoadout
 {
@@ -20,6 +21,24 @@ namespace CombatExtended.ExtendedLoadout
              * Need to patch it first, before other mods patch the methods where Loadout::Slots is used
              */
             LoadoutProxy_Patch.Patch();
+
+            //Manual patches of Utility_HoldTracker
+            var trackerPatcher = new Harmony("Glucocorticoid.ceutilitypatches");
+            var target = AccessTools.TypeByName("Utility_HoldTracker");
+
+            var methodGetExcessEquipment = AccessTools.Method(target, "GetExcessEquipment");
+            trackerPatcher.Patch(methodGetExcessEquipment, 
+                                    null, 
+                                    new HarmonyMethod(typeof(Utility_HoldTracker_Patch).GetMethod("Utility_HoldTracker_GetExcessEquipment")),
+                                    null, 
+                                    null);
+            
+            var getExcessThing = AccessTools.Method(target, "GetExcessThing");
+            trackerPatcher.Patch(getExcessThing, 
+                                    null, 
+                                    new HarmonyMethod(typeof(Utility_HoldTracker_Patch).GetMethod("Utility_HoldTracker_GetExcessThing")),
+                                    null, 
+                                    null);
         }
     }
 
@@ -65,14 +84,15 @@ namespace CombatExtended.ExtendedLoadout
 
                 loadoutNames[i].VisibilityPredicate = () => UseMultiLoadouts && colId < MultiLoadoutsCount;
 
-                loadoutNames[i].OnValueChanged = _ =>
+                loadoutNames[i].ValueChanged += _ =>
                 {
                     var assign = DefDatabase<PawnTableDef>.GetNamed("Assign");
                     var loadoutColumn = assign.columns.FirstOrDefault(c => c.defName.Equals($"Loadout_{colId}"));
                     if (loadoutColumn != null)
                     {
                         loadoutColumn.label = loadoutNames[colId].Value;
-                        loadoutColumn.cachedLabelCap = null; // reset LabelCap cache
+                        //loadoutColumn.cachedLabelCap = null; // reset LabelCap cache
+                        EraseLabelCache(loadoutColumn);
                         DbgLog.Msg($"Changed column name[{colId}]: {loadoutNames[colId]}");
                     }
                 };
@@ -113,6 +133,13 @@ namespace CombatExtended.ExtendedLoadout
             }
 
             Log.Message("[CombatExtended.ExtendedLoadout] Initialized");
+        }
+
+        private void EraseLabelCache(PawnColumnDef def)
+        {
+            var labelCacheField = def.GetType().GetField("cachedLabelCap", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (labelCacheField == null) return;
+            labelCacheField.SetValue(def, null);  
         }
 
         private IEnumerable<PawnColumnDef> GeneratePawnColumnDefs(int count)

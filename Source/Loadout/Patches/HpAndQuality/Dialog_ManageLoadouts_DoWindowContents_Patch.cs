@@ -19,7 +19,8 @@ namespace CombatExtended.ExtendedLoadout
         [UsedImplicitly]
         public static IEnumerable<CodeInstruction> DoWindowContents_Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            var drawSlotList = AccessTools.Method(typeof(Dialog_ManageLoadouts), nameof(Dialog_ManageLoadouts.DrawSlotList));
+            var drawSlotList = AccessTools.Method(typeof(Dialog_ManageLoadouts), "DrawSlotList");
+            var hpAndQualityDrawer = AccessTools.Method(typeof(Dialog_ManageLoadouts_DoWindowContents_Patch), nameof(DrawHpQuality));
 
             bool heightFixed = false;
             bool drawHpQualityInjected = false;
@@ -40,7 +41,7 @@ namespace CombatExtended.ExtendedLoadout
                     yield return ci;
                     yield return new CodeInstruction(OpCodes.Ldarg_0); // this
                     yield return new CodeInstruction(OpCodes.Ldloc_S, 8); // local: bulkBarRect
-                    yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Dialog_ManageLoadouts_DoWindowContents_Patch), nameof(DrawHpQuality)));
+                    yield return new CodeInstruction(OpCodes.Call, hpAndQualityDrawer);
                     drawHpQualityInjected = true;
                 }
                 else
@@ -57,8 +58,8 @@ namespace CombatExtended.ExtendedLoadout
 
         public static void DrawHpQuality(Dialog_ManageLoadouts dialog, Rect bulkBarRect)
         {
-            Rect hpRect = new(bulkBarRect.xMin, bulkBarRect.yMax + Dialog_ManageLoadouts._margin, bulkBarRect.width, Dialog_ManageLoadouts._barHeight);
-            Rect qualityRect = new(hpRect.xMin, hpRect.yMax + Dialog_ManageLoadouts._margin, hpRect.width, Dialog_ManageLoadouts._barHeight);
+            Rect hpRect = new(bulkBarRect.xMin, bulkBarRect.yMax + CombatReflected.margin, bulkBarRect.width, CombatReflected.barHeight);
+            Rect qualityRect = new(hpRect.xMin, hpRect.yMax + CombatReflected.margin, hpRect.width, CombatReflected.barHeight);
             var loadoutExtended = dialog.CurrentLoadout.Extended();
             Widgets.FloatRange(hpRect, 976833332, ref loadoutExtended.HpRange, 0f, 1f, "HitPoints", ToStringStyle.PercentZero);
             Widgets.QualityRange(qualityRect, 976833333, ref loadoutExtended.QualityRange);

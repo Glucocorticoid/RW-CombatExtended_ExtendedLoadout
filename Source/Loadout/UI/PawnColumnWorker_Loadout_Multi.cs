@@ -64,7 +64,7 @@ namespace CombatExtended.ExtendedLoadout
 
             if (table.SortingBy == def)
             {
-                var texture2D = table.SortingDescending ? SortingDescendingIcon : SortingIcon;
+                var texture2D = table.SortingDescending ? CombatReflected.SortingDescendingIcon : CombatReflected.SortingIcon;
                 GUI.DrawTexture(new Rect(rect.xMax - texture2D.width - 1f, rect.yMax - texture2D.height - 1f, texture2D.width, texture2D.height), texture2D);
             }
 
@@ -98,15 +98,16 @@ namespace CombatExtended.ExtendedLoadout
             int index = GetIndexFromDefName(def.defName);
 
             //changed: int num = Mathf.FloorToInt((rect.width - 4f) * 0.714285731f);
-            int num = Mathf.FloorToInt((rect.width - 4f) - IconSize);
+            int num = Mathf.FloorToInt((rect.width - 4f) - CombatReflected.IconSize);
             //changed: int num2 = Mathf.FloorToInt((rect.width - 4f) * 0.2857143f);
-            int num2 = Mathf.FloorToInt(IconSize);
+            int num2 = Mathf.FloorToInt(CombatReflected.IconSize);
             float num3 = rect.x;
             //added:
-            float num4 = rect.y + ((rect.height - IconSize) / 2);
+            float num4 = rect.y + ((rect.height - CombatReflected.IconSize) / 2);
 
             // Reduce width if we're adding a clear forced button
-            bool somethingIsForced = pawn.HoldTrackerAnythingHeld();
+            //bool somethingIsForced = pawn.HoldTrackerAnythingHeld();
+            bool somethingIsForced = CombatReflected.AnythingHeld(pawn);
             Rect loadoutButtonRect = new(num3, rect.y + 2f, num, rect.height - 4f);
             if (somethingIsForced)
             {
@@ -126,7 +127,8 @@ namespace CombatExtended.ExtendedLoadout
             {
                 if (Widgets.ButtonImage(forcedHoldRect, ClearImage))
                 {
-                    pawn.HoldTrackerClear(); // yes this will also delete records that haven't been picked up and thus not shown to the player...
+                    //pawn.HoldTrackerClear(); // yes this will also delete records that haven't been picked up and thus not shown to the player...
+                    LoadoutManager.GetHoldRecords(pawn).Clear();
                 }
                 TooltipHandler.TipRegion(forcedHoldRect, new TipSignal(delegate
                 {
@@ -154,7 +156,7 @@ namespace CombatExtended.ExtendedLoadout
                 Find.WindowStack.Add(new Dialog_ManageLoadouts_Extended((pawn.GetLoadout() as Loadout_Multi)![index]));
             }
             // Added this next line.
-            TooltipHandler.TipRegion(assignTabRect, new TipSignal(textGetter("CE_Loadouts"), pawn.GetHashCode() * 613));
+            TooltipHandler.TipRegion(assignTabRect, new TipSignal(CombatReflected.textGetter("CE_Loadouts"), pawn.GetHashCode() * 613));
             num3 += num2;
         }
     }

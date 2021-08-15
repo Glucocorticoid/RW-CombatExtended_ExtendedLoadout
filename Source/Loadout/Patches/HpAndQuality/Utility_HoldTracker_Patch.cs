@@ -10,17 +10,17 @@ namespace CombatExtended.ExtendedLoadout
     ///
     /// Versions for MultiLoadout and Standart
     /// </summary>
-    [HarmonyPatch(typeof(Utility_HoldTracker))]
-    public class Utility_HoldTracker_Patch
+    //[HarmonyPatch(typeof(Utility_HoldTracker))]
+    public static class Utility_HoldTracker_Patch
     {
         static bool Prepare() => ExtendedLoadoutMod.Instance.useHpAndQualityInLoadouts;
 
         /// <summary>
         /// Drop only 1 weapon per tick, if original false
         /// </summary>
-        [HarmonyPatch(nameof(Utility_HoldTracker.GetExcessEquipment))]
-        [HarmonyPostfix]
-        [UsedImplicitly]
+        //[HarmonyPatch(nameof(Utility_HoldTracker.GetExcessEquipment))]
+        //[HarmonyPostfix]
+        //[UsedImplicitly]
         public static void Utility_HoldTracker_GetExcessEquipment(Pawn pawn, ref ThingWithComps dropEquipment, ref bool __result)
         {
             if (__result)
@@ -56,9 +56,9 @@ namespace CombatExtended.ExtendedLoadout
         /// <summary>
         /// Drop only 1 weapon per tick, if original false
         /// </summary>
-        [HarmonyPatch(nameof(Utility_HoldTracker.GetExcessThing))]
-        [HarmonyPostfix]
-        [UsedImplicitly]
+        //[HarmonyPatch(nameof(Utility_HoldTracker.GetExcessThing))]
+        //[HarmonyPostfix]
+        //[UsedImplicitly]
         public static void Utility_HoldTracker_GetExcessThing(Pawn pawn, ref Thing dropThing, ref int dropCount, ref bool __result)
         {
             if (__result)
