@@ -21,24 +21,6 @@ namespace CombatExtended.ExtendedLoadout
              * Need to patch it first, before other mods patch the methods where Loadout::Slots is used
              */
             LoadoutProxy_Patch.Patch();
-
-            //Manual patches of Utility_HoldTracker
-            var trackerPatcher = new Harmony("Glucocorticoid.ceutilitypatches");
-            var target = AccessTools.TypeByName("Utility_HoldTracker");
-
-            var methodGetExcessEquipment = AccessTools.Method(target, "GetExcessEquipment");
-            trackerPatcher.Patch(methodGetExcessEquipment, 
-                                    null, 
-                                    new HarmonyMethod(typeof(Utility_HoldTracker_Patch).GetMethod("Utility_HoldTracker_GetExcessEquipment")),
-                                    null, 
-                                    null);
-            
-            var getExcessThing = AccessTools.Method(target, "GetExcessThing");
-            trackerPatcher.Patch(getExcessThing, 
-                                    null, 
-                                    new HarmonyMethod(typeof(Utility_HoldTracker_Patch).GetMethod("Utility_HoldTracker_GetExcessThing")),
-                                    null, 
-                                    null);
         }
     }
 
@@ -131,6 +113,24 @@ namespace CombatExtended.ExtendedLoadout
             {
                 LoadoutProxy_Patch.Unpatch();
             }
+
+            //Manual patches of Utility_HoldTracker
+            var trackerPatcher = new Harmony("Glucocorticoid.ceutilitypatches");
+            var target = AccessTools.TypeByName("Utility_HoldTracker");
+
+            var methodGetExcessEquipment = AccessTools.Method(target, "GetExcessEquipment");
+            trackerPatcher.Patch(methodGetExcessEquipment, 
+                                    null, 
+                                    new HarmonyMethod(typeof(Utility_HoldTracker_Patch).GetMethod("Utility_HoldTracker_GetExcessEquipment")),
+                                    null, 
+                                    null);
+            
+            var getExcessThing = AccessTools.Method(target, "GetExcessThing");
+            trackerPatcher.Patch(getExcessThing, 
+                                    null, 
+                                    new HarmonyMethod(typeof(Utility_HoldTracker_Patch).GetMethod("Utility_HoldTracker_GetExcessThing")),
+                                    null, 
+                                    null);
 
             Log.Message("[CombatExtended.ExtendedLoadout] Initialized");
         }
