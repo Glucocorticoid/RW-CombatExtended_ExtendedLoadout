@@ -8,6 +8,7 @@ using System;
 
 namespace CombatExtended.ExtendedLoadout
 {
+    [StaticConstructorOnStartup]
     public static class CombatReflected
     {
         public static float margin = 6f; //CE.Dialog_ManageLoadouts._margin 
